@@ -3,7 +3,7 @@
 use Illuminate\Support\Str;
 
 return [
-    'route' => '/config.js',
+    'route' => '/vite-env.js',
 
     'global' => '__ENV__',
 

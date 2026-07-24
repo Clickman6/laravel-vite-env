@@ -1,6 +1,11 @@
 # laravel-vite-env
 
-Serves a public `/config.js` with `VITE_*` environment values, sourced from Laravel's `config()`
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/clickman6/laravel-vite-env.svg?style=flat-square)](https://packagist.org/packages/clickman6/laravel-vite-env)
+[![GitHub Tests Action Status](https://github.com/clickman6/laravel-vite-env/actions/workflows/tests.yml/badge.svg)](https://github.com/clickman6/laravel-vite-env/actions/workflows/tests.yml)
+[![GitHub Code Style Action Status](https://github.com/clickman6/laravel-vite-env/actions/workflows/fix-php-code-style-issues.yml/badge.svg)](https://github.com/clickman6/laravel-vite-env/actions/workflows/fix-php-code-style-issues.yml)
+[![Total Downloads](https://img.shields.io/packagist/dt/clickman6/laravel-vite-env.svg?style=flat-square)](https://packagist.org/packages/clickman6/laravel-vite-env)
+
+Serves a public `/vite-env.js` with `VITE_*` environment values, sourced from Laravel's `config()`
 (not directly from `.env`). No file generation, works with `php artisan config:cache`, and fits
 immutable Docker images.
 
@@ -27,7 +32,7 @@ Publish the JS helper:
 php artisan vendor:publish --tag=frontend-assets
 ```
 
-In your Blade template — `@viteEnv` inserts `<script src="/config.js?v=...">` with the current
+In your Blade template — `@viteEnv` inserts `<script src="/vite-env.js?v=...">` with the current
 config version, **before** the main bundle:
 
 ```blade
@@ -52,12 +57,12 @@ included, no manual key list needed.
 Optionally publish the config:
 
 ```bash
-php artisan vendor:publish --tag=frontend-config
+php artisan vendor:publish --tag=vite-env-config
 ```
 
-`config/frontend.php`:
+`config/vite-env.php`:
 
-- `route` — the endpoint path, defaults to `/config.js`.
+- `route` — the endpoint path, defaults to `/vite-env.js`.
 - `global` — the global JS variable name, defaults to `__ENV__`.
 - `prefix` — the environment variable prefix, defaults to `VITE_`.
 - `version` — a random string (`Str::random(8)`), generated when the config file is loaded.
@@ -84,22 +89,27 @@ runtime.
 The endpoint is fully public (no middleware/auth) — safety comes from the fact that only
 `VITE_`-prefixed variables are included, i.e. values explicitly meant for the frontend.
 
+Under Laravel Octane, the config file loads once per worker boot, not per request — so `version`
+and the whitelist stay constant for the worker's lifetime even without `config:cache`. This
+matches the cached-config behavior above, and differs from the "recomputed on every request"
+behavior described below for plain (non-Octane) local development.
+
 ## Caching
 
-`/config.js?v=<version>` is served with `Cache-Control: public, max-age=31536000, immutable` —
+`/vite-env.js?v=<version>` is served with `Cache-Control: public, max-age=31536000, immutable` —
 the browser never re-requests it as long as the URL doesn't change (same idea as fingerprinted
 Vite/webpack assets). `version` is baked into `bootstrap/cache/config.php` together with the
 whitelist during `php artisan config:cache` and stays constant for the whole lifetime of a
 deployment; on the next deploy (new `.env` → `config:cache`) a new random version is generated —
 the URL changes and the browser fetches the new JS.
 
-Without `config:cache` (local development), `config/frontend.php` is recomputed on every request
-— `version` changes every time, so browser caching effectively doesn't apply, which is expected
-in dev.
+Without `config:cache` and without Octane (plain local development), `config/vite-env.php` is
+recomputed on every request — `version` changes every time, so browser caching effectively doesn't
+apply, which is expected in dev.
 
-Always use `@viteEnv` (or `route('frontend.js') . '?v=' . config('frontend.version')`), never a
-bare `/config.js` without `?v=` — without a version in the URL, the browser would cache the config
-forever with no way to invalidate it.
+Always use `@viteEnv` (or `route('vite-env.js') . '?v=' . config('vite-env.version')`), never a
+bare `/vite-env.js` without `?v=` — without a version in the URL, the browser would cache the
+config forever with no way to invalidate it.
 
 ## License
 

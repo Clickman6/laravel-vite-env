@@ -1,7 +1,7 @@
 <?php
 
-use Clickman6\LaravelViteEnv\Http\Controllers\FrontendConfigController;
+use Clickman6\LaravelViteEnv\Http\Controllers\ViteEnvController;
 use Illuminate\Support\Facades\Route;
 
-Route::get(config('frontend.route', '/config.js'), FrontendConfigController::class)
-    ->name('frontend.js');
+Route::get(config('vite-env.route'), ViteEnvController::class)
+    ->name('vite-env.js');
