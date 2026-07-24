@@ -11,7 +11,7 @@ class ViteEnvTest extends TestCase
     {
         config()->set('vite-env.version', 'abc123');
 
-        $this->assertSame(route('vite-env.js') . '?v=abc123', ViteEnv::url());
+        $this->assertSame(route('vite-env.js').'?v=abc123', ViteEnv::url());
     }
 
     public function test_directive_renders_an_escaped_script_tag(): void
@@ -20,6 +20,6 @@ class ViteEnvTest extends TestCase
 
         $html = trim(Blade::render('@viteEnv'));
 
-        $this->assertSame('<script src="' . e(ViteEnv::url()) . '"></script>', $html);
+        $this->assertSame('<script src="'.e(ViteEnv::url()).'"></script>', $html);
     }
 }

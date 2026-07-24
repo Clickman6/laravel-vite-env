@@ -15,6 +15,6 @@ class ViteEnv
 
     public static function url(): string
     {
-        return route('vite-env.js') . '?v=' . config('vite-env.version');
+        return route('vite-env.js').'?v='.config('vite-env.version');
     }
 }
