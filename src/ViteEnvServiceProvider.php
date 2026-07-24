@@ -20,7 +20,7 @@ class ViteEnvServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/../resources/js/env.js' => resource_path('js/vendor/laravel-vite-env/env.js'),
-        ], 'frontend-assets');
+        ], 'vite-env-js');
 
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
 

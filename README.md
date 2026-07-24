@@ -29,7 +29,7 @@ VITE_API_URL=https://api.example.com
 Publish the JS helper:
 
 ```bash
-php artisan vendor:publish --tag=frontend-assets
+php artisan vendor:publish --tag=vite-env-js
 ```
 
 In your Blade template — `@viteEnv` inserts `<script src="/vite-env.js?v=...">` with the current
