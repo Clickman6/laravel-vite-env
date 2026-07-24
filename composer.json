@@ -1,0 +1,29 @@
+{
+    "name": "clickman6/laravel-vite-env",
+    "description": "Serve whitelisted VITE_* environment values as /config.js, sourced from Laravel's cached config — no files, no .env at runtime.",
+    "keywords": ["laravel", "vite", "config", "env", "frontend"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "clickman6"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^10.0|^11.0|^12.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Clickman6\\LaravelViteEnv\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Clickman6\\LaravelViteEnv\\FrontendConfigServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable"
+}
